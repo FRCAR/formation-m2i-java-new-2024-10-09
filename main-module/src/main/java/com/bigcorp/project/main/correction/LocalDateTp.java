@@ -28,6 +28,20 @@ public class LocalDateTp {
 			nextMonday = nextMonday.with(TemporalAdjusters.next(DayOfWeek.MONDAY));
 		}
 		
+		//Un boulanger va travailler en 2023 les lundis, mardi et vendredi.
+		//Etant superstitieux, il ne travaillera pas les vendredi 13.
+		LocalDate premierJanvier2023 = LocalDate.of(2023, 1, 1);
+		LocalDate premierJanvier2024 = premierJanvier2023.plusYears(1);
+		
+		long nombreDeJoursDeTravail = premierJanvier2023.datesUntil(premierJanvier2024)
+			.filter(t -> t.getDayOfWeek()==DayOfWeek.MONDAY	
+							|| (t.getDayOfWeek() == DayOfWeek.FRIDAY && t.getDayOfMonth() != 13)
+							|| t.getDayOfWeek() == DayOfWeek.TUESDAY)
+			//Peek sert pour sortir des opérations de debug, sans modifier le stream
+			.peek(t -> System.out.println(t.getDayOfWeek().toString() + "-" + t))
+			.count();
+		
+		System.out.println("Le boulanger aura travaillé %1$s jours".formatted(nombreDeJoursDeTravail));
 		
 	}
 
